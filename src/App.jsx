@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-// 匯入你剛建立的頁面
+
+// 建立頁面
 import Home from './Pages/Home';
-import Fg from './Pages/Fg';
 import Intro from './Pages/Intro';
 import Proc from './Pages/Proc';
+import Demo from './Pages/Demo';
 
 function App() {
   return (
@@ -12,9 +13,9 @@ function App() {
         {/* 導覽列 */}
         <nav className="flex justify-center gap-8 p-6 bg-black/50 backdrop-blur-md sticky top-0 border-b border-white/10">
           <Link to="/" className="hover:text-cyan-400 transition">首頁</Link>
-          <Link to="/intro" className="hover:text-cyan-400 transition">介紹 (Intro)</Link>
-          <Link to="/fg" className="hover:text-cyan-400 transition">分組 (Fg)</Link>
-          <Link to="/proc" className="hover:text-cyan-400 transition">流程 (Proc)</Link>
+          <Link to="/intro" className="hover:text-cyan-400 transition">簡介</Link>
+          <Link to="/proc" className="hover:text-cyan-400 transition">製作歷程</Link>
+          <Link to="/Demo" className="hover:text-cyan-400 transition">成果影片</Link>
         </nav>
 
         {/* 內容區域 */}
@@ -22,8 +23,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/intro" element={<Intro />} />
-            <Route path="/fg" element={<Fg />} />
             <Route path="/proc" element={<Proc />} />
+            <Route path="/Demo" element={<Demo />} />
           </Routes>
         </main>
       </div>

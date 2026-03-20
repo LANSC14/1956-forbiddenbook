@@ -1,16 +1,119 @@
-//導出Making函數組件
+import React from 'react';
+import { Link } from 'react-router-dom';
+import img1 from '../assets/making-img-1.png';
+import img2 from '../assets/making-img-2.png';
+import img3 from '../assets/making-img-3.png';
+import img4 from '../assets/making-img-4.png';
+import img5 from '../assets/making-img-5.png';
+
+const makingSteps = [
+  { id: 1, cat: '資料蒐集' },
+  { id: 2, cat: '內容篩選', desc: '《1956·不該看的書》的劇本選定台灣白色恐怖時期，考量到VR體驗的長度限制並濃縮重點，因此挑選1956年白色恐怖時期的臺南市委會郵電支部案作為主要敘事背景，講述受難者丁窈窕及施水環受刑期間的遭遇。', img: img1 },
+  { id: 3, cat: '人物設定', desc: '玩家扮演的角色融合兩名實史人物為主，丁窈窕及施水環，其餘角色服裝則參考史料中受刑人及看守所管理員的服裝。', img: img2 },
+  { id: 4, cat: '場景設定', desc: 'VR體驗場景為看守所，主要參考景美看守所及相近時期的室內擺設與家具。', img: img3 },
+  { id: 5, cat: '物件設定', desc: '場景內物件包含桌椅、書櫃、縫衣機、盥洗台、兒童玩具、菸盒及日記。', img: img4 },
+  { id: 6, cat: '實際成果', desc: '最終整合所有歷史素材，打造出具備沉浸感與教育意義的VR歷史空間。', img: img5 },
+]; 
+
 export default function Making() {
   return (
-    <div className="p-10 text-center text-4xl font-bold text-green-400">
+    <div className="min-h-screen bg-white py-16 md:py-24 px-4 text-gray-800 font-sans">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* 1. 頁面大標題 - 稍微縮小 */}
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-16 md:mb-20 tracking-widest">
+          製作歷程
+        </h1>
 
-      {/* p (Padding)-10: 內邊距
-          text-center: 文字居中
-          text-4xl: 超大字體
-          font-bold: 文字加粗
-          text-green-400: 前景色
-      */}
+        {/* 2. 第一步：資料蒐集 (完全置中) */}
+        <div className="text-center mb-20 md:mb-32 relative z-10">
+          <span className="text-3xl md:text-4xl font-black text-orange-500 italic uppercase tracking-tighter block whitespace-nowrap">
+            資料蒐集
+          </span>
+        </div>
 
-      這是 Making 頁面
+        {/* 3. 時間軸區域 */}
+        <div className="relative">
+          
+          {/* 中心裝飾線 (電腦版顯示) */}
+          <div className="absolute left-1/2 -translate-x-1/2 w-px h-full bg-orange-200 hidden md:block z-0" />
+
+          <div className="space-y-24 md:space-y-40">
+            {makingSteps.map((step, index) => {
+              // 跳過已經置中的資料蒐集
+              if (step.id === 1) return null;
+
+              // ⚠️ 判斷是否為最後一個項目 (id: 6) 用於延伸連線
+              const isLast = step.id === 6;
+
+              return (
+                <div 
+                  key={step.id} 
+                  className={`flex flex-col md:flex-row items-center justify-between relative ${index % 2 === 1 ? '' : 'md:flex-row-reverse'}`}
+                >
+                  
+                  {/* (手機版專用) 步驟標籤 - 先出現在卡片上方 */}
+                  <div className="w-full md:hidden mb-6 text-center z-10">
+                    <span className="text-2xl font-bold text-orange-500 italic uppercase tracking-widest block whitespace-nowrap">
+                      {step.cat}
+                    </span>
+                  </div>
+
+                  {/* 內容卡片區 - 修正圖片裁切與RWD寬度 */}
+                  <div className="w-full md:w-[42%] z-20">
+                    <div className="bg-white p-6 md:p-8 rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.06)] hover:shadow-2xl transition-all duration-500 border border-gray-50 flex flex-col items-center">
+                      {step.img && (
+                        <img 
+                          src={step.img} 
+                          alt={step.cat} 
+                          className="w-full h-auto rounded-2xl mb-8 shadow-sm block" // 移除 object-cover 與 max-h
+                        />
+                      )}
+                      {step.desc && (
+                        <p className="text-gray-600 leading-relaxed text-lg font-light whitespace-pre-line text-left self-start">
+                          {step.desc}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 中心節點與延伸連線 (電腦版顯示) */}
+                  <div className={`hidden md:flex absolute left-1/2 -translate-x-1/2 rounded-full items-center justify-center shadow-sm ${isLast ? 'w-16 h-16 border-4 border-orange-300 z-30' : 'w-12 h-12 bg-white border-2 border-orange-300 z-20'}`}>
+                    <div className={`${isLast ? 'w-8 h-8' : 'w-4 h-4'} rounded-full bg-orange-400 shadow-inner`}></div>
+                    
+                    {/* ✅ 在最後一個節點下方延伸線，徹底連好它 */}
+                    {isLast && (
+                      <div className="absolute top-[calc(100%+12px)] w-px h-28 bg-linear-to-b from-orange-400 to-transparent"></div>
+                    )}
+                  </div>
+
+                  {/* (電腦版專用) 側邊大標籤 - 全部縮小 🔥 統一至text-3xl 🔥 */}
+                  <div className={`hidden md:block md:w-[42%] mt-12 md:mt-0 z-20 ${index % 2 === 1 ? 'md:pl-32 text-left' : 'md:pr-32 md:text-right'}`}>
+                    <span className="text-2xl md:text-3xl font-black text-orange-500 italic uppercase tracking-wider block whitespace-nowrap">
+                      {step.cat}
+                    </span>
+                  </div>
+
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 4. 底部引導按鈕 - 刪除斷線並拉近距離 */}
+        <div className="mt-32 mb-20 flex flex-col items-center relative z-10">
+          {/* ✅ 原本這裡斷掉的線 (div) 已刪除 */}
+          
+          <Link 
+            to="/Video" 
+            className="group px-14 py-5 bg-gray-900 text-white rounded-full text-lg font-bold hover:bg-orange-600 transition-all shadow-2xl flex items-center gap-4 active:scale-95"
+          >
+            觀看成果影片
+            <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
+          </Link>
+        </div>
+
+      </div>
     </div>
-    );
+  );
 }

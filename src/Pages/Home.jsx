@@ -1,9 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import homeHero from '../assets/index-img-2.png';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 1. 偵測是否為移動裝置，並在手機版自動開啟 isHovered
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        // 手機版：進場 300ms 後自動展開內容
+        const timer = setTimeout(() => setIsHovered(true), 300);
+        return () => clearTimeout(timer);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black font-sans">
@@ -20,32 +38,33 @@ export default function Home() {
       {/* 內容層 */}
       <div 
         className="relative z-10 flex h-full flex-col items-center justify-center text-center px-6"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        // 電腦版維持 Hover 邏輯，手機版則由 useEffect 接管
+        onMouseEnter={() => !isMobile && setIsHovered(true)}
+        onMouseLeave={() => !isMobile && setIsHovered(false)}
       >
         
-        {/* 大標題 */}
-        <h1 className={`text-7xl md:text-[10rem] font-black tracking-[-0.08em] transition-all duration-700 cursor-default select-none
+        {/* 大標題：手機版字體稍微縮小 (text-5xl) 以防斷行 */}
+        <h1 className={`text-5xl md:text-[10rem] font-black tracking-[-0.08em] transition-all duration-700 cursor-default select-none
           ${isHovered 
-            ? 'text-white opacity-100 drop-shadow-[0_0_50px_rgba(255,255,255,0.4)]' 
-            : 'text-white/30'}`}
+            ? 'text-white opacity-100 drop-shadow-[0_0_50px_rgba(255,255,255,0.4)] translate-y-0' 
+            : 'text-white/30 translate-y-4'}`}
         >
           1956 · 不該看的書
         </h1>
 
-        <p className={`mt-6 text-xl md:text-2xl tracking-[0.5em] font-light transition-all duration-700 delay-100
+        <p className={`mt-6 text-lg md:text-2xl tracking-[0.5em] font-light transition-all duration-700 delay-100
           ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           VR 歷史體驗遊戲
         </p>
         
-        {/* 同步簡介頁面的磨砂按鈕風格 */}
+        {/* 磨砂按鈕 */}
         <div className={`mt-12 transition-all duration-700 delay-200
           ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
           <Link 
             to="/Introduction"
             className="inline-block group active:scale-95 transition-all cursor-pointer"
           >
-            <button className="px-14 py-4 bg-[#161b22]/40 backdrop-blur-md border border-white/20 rounded-full text-lg font-bold text-white transition-all duration-300 group-hover:bg-white group-hover:text-black group-hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] cursor-pointer">
+            <button className="px-14 py-4 bg-[#161b22]/40 backdrop-blur-md border border-white/20 rounded-full text-base md:text-lg font-bold text-white transition-all duration-300 group-hover:bg-white group-hover:text-black group-hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] cursor-pointer">
               欲知詳情
             </button>
           </Link>
